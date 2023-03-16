@@ -1,10 +1,9 @@
-<!-- {% extends 'index.html' %}
+{% extends 'index.html' %}
 
 
 {% block content %}
-    <h1>Logout Page</h1>
-    <p>Do u wanna log out ?</p>
-    <br>
-    <a class="btn btn-primary" href="{% url 'logout' %}"></a>
-    
-{% endblock  %} -->
+    <h4>You are logged out?</h4>
+    <small class="text-nuted">
+        Do u wanna log out?<a href="{% url 'login' %}">Login</a>
+    </small>
+{% endblock  %}

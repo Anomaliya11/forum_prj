@@ -8,5 +8,9 @@
         {{ form|crispy }}
         <button class="btn btn-primary">Login</button>
     </form>
+    <hr>
+    <small class="text-nuted">
+        Not registered yet?<a href="{% url 'register' %}">Sign up</a>
+    </small>
     
 {% endblock  %}
