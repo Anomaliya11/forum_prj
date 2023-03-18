@@ -2,7 +2,6 @@ from django.db import models
 from django.urls import reverse
 
 class Post(models.Model):
-
     title = models.CharField(verbose_name="Название", max_length=100)
     description = models.TextField(verbose_name="Описание", null=True, blank=True)
     image = models.ImageField(verbose_name="Картинка", null=True, blank=True)
@@ -15,6 +14,7 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('index')
 
+
 class Comment(models.Model):
     description = models.TextField(verbose_name="описание", null=True, blank=True)
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
@@ -25,3 +25,11 @@ class Comment(models.Model):
 
     def get_absolute_url(self):
         return reverse('index')
+
+
+class Message(models.Model):
+    title = models.CharField(verbose_name="Subject", max_length=250, null=True, blank=True)
+    body = models.TextField(verbose_name="Body")
+
+    def __str__(self):
+        return f'{self.body}'
