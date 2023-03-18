@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'service.apps.ServiceConfig',
     'crispy_forms',
     'crispy_bootstrap5',
+    'rest_framework',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
