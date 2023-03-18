@@ -1,3 +1,7 @@
+import csv
+import datetime
+from urllib import response
+
 from urllib.parse import urlparse
 from django.shortcuts import render, redirect
 from service.models import Post, Comment
@@ -10,6 +14,8 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
 from forum_prj import settings
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
 
 
 def index(req):
@@ -90,3 +96,23 @@ class AddCommentView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.post_id = self.kwargs['pk']
         return super().form_valid(form)
+
+def upload(req):
+    context = {}
+    if req.method == "POST":
+        upload_file = req.FILES['file']
+        file = FileSystemStorage()
+        name = file.save(upload_file.name, upload_file)
+        context['url'] = file.url(name)
+    return render(req,"upload.html", context)
+
+def download(req):
+    response = HttpResponse(content_type="text/csv")
+    writer = csv.writer(response)
+    writer.writerow(("Title", "Description", "Created_at"))
+
+    for row in Post.objects.all().values_list('title', 'description', 'created_at'):
+        writer.writerow(row)
+    filename =str(datetime.datetime.now()) + ' ' + 'post.csv'
+    response["Cotent-Discription"] = f"attachment; filename={filename}"
+    return response
