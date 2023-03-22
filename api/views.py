@@ -8,10 +8,47 @@ from api.serializers import CheckboxSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from django.contrib.auth.models import User
+from rest_framework import authentication, permissions
+from rest_framework import generics, mixins
 
 # class CheckboxViewSet(viewsets.ModelViewSet):
 #     queryset = Checkbox.objects.all()
 #     serializer_class = CheckboxSerializer
+
+class CheckboxList(generics.ListCreateAPIView):
+    queryset = Checkbox.objects.all()
+    serializer_class = CheckboxSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+        
+    def post(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+    # def get(self, req, format=None):
+    #     checkboxes = Checkbox.objects.all()
+    #     serializer = CheckboxSerializer(checkboxes, many=True)
+    #     return Response(serializer.data)
+
+    # def post(self, req, format=None):
+    #     serializer = CheckboxSerializer(data=req.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class CheckboxDetailed(APIView):
+
+    permission_classes = [permissions.IsAdminUser]
+
+    def delete(self, req, pk, format=None):
+        checkbox = Checkbox.objects.get(id=pk)
+        checkbox.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    
 
 @api_view(['GET'])
 def checkbox_list(req):
