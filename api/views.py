@@ -1,11 +1,13 @@
 # from django.shortcuts import render
+import logging
+
 from django.forms import CharField
 
 from rest_framework import viewsets
 from api import serializers
 from api.models import Checkbox
 from api.serializers import CheckboxSerializer, DataSerializer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -14,9 +16,19 @@ from rest_framework import authentication, permissions
 from rest_framework import generics, mixins
 from api.utils import Sum
 
+logger = logging.getLogger('django')
+
 class CheckboxViewSet(viewsets.ModelViewSet):
     queryset = Checkbox.objects.all()
     serializer_class = CheckboxSerializer
+
+    @action(detail=False, methods=['get'])
+    def limit(self, req,pk=None):
+        try:
+            params = req.query_params
+        except:
+            logger.info('params: %s', params)
+        return Response({"result":params})
 
 class CheckboxList(generics.ListCreateAPIView):
     queryset = Checkbox.objects.all()
